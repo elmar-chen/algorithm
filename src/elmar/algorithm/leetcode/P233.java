@@ -73,16 +73,4 @@ public class P233 {
 
 	}
 
-	public static void main(String[] args) {
-		CountDigitOne problem = new CountDigitOne();
-		problem.resolve(Integer.MAX_VALUE);
-		int numOfOne = 0;
-		for (int i = 1; i <= 100; i++) {
-			numOfOne += (i + "").replaceAll("[^1]", "").length();
-
-		}
-
-		System.out.println(problem.resolve(Integer.MAX_VALUE) + "==" + numOfOne);
-	}
-
 }
