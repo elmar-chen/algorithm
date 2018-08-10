@@ -1,6 +1,6 @@
 package elmar.algorithm;
 
-public abstract class DFSNodeVisitor<T> {
+public interface DFSNodeVisitor<T> {
 	public abstract void visitFirstRound(TreeNode<T> node);;
 
 	public abstract void visitSecondRound(TreeNode<T> node);;

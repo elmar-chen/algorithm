@@ -20,7 +20,7 @@ public class P22 {
 		return visitor.results;
 	}
 
-	class ParenthesisGenerateTreeVisitor extends DFSNodeVisitor<Character> {
+	class ParenthesisGenerateTreeVisitor implements DFSNodeVisitor<Character> {
 		List<String> results = new ArrayList<>();
 		int balance = 0;
 		StringBuffer sbuff = new StringBuffer();
