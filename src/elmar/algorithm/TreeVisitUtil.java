@@ -24,27 +24,34 @@ public class TreeVisitUtil {
 			}
 		}
 	}
+
 	public static <T> void dfsVisit(TreeNode<T> root, NodeVisitor<T> visitor) {
 		dfsVisit(root, visitor, true);
 	}
+
 	public static <T> void dfsVisit(TreeNode<T> root, NodeVisitor<T> visitor, boolean parentFirst) {
-		
+		DFSNodeVisitor<T> dfsVisitor = DFSNodeVisitor.fromNodeVistor(visitor, parentFirst);
+		dfsVisit(root, dfsVisitor);
+	}
+
+	public static <T> void dfsVisit(TreeNode<T> root, DFSNodeVisitor<T> visitor) {
+
 		Stack<Iterator<? extends TreeNode<T>>> stackIter = new Stack<>();
 		Stack<TreeNode<T>> stackNode = new Stack<>();
-		stackIter.push(root.children());
 		stackNode.push(root);
-		if(parentFirst) visitor.visit(root);
+		visitor.visitFirstRound(root);
+		stackIter.push(root.children());
 		while (!stackNode.isEmpty()) {
 			Iterator<? extends TreeNode<T>> nodeIterator = stackIter.peek();
 			if (nodeIterator.hasNext()) {
 				TreeNode<T> next = nodeIterator.next();
 				stackNode.push(next);
+				visitor.visitFirstRound(next);
 				stackIter.push(next.children());
-				if(parentFirst)  visitor.visit(next);
 			} else {
 				TreeNode<T> node = stackNode.pop();
 				stackIter.pop();
-				if(!parentFirst) visitor.visit(node);
+				visitor.visitSecondRound(node);
 			}
 		}
 	}
@@ -60,10 +67,35 @@ public class TreeVisitUtil {
 
 		@Override
 		public Iterator<NumberTreeNode> children() {
+			System.out.println(sbuff + " " + children);
 			return children.iterator();
 		}
 
+		@Override
+		public String toString() {
+			return getValue().toString();
+		}
 	}
+
+	static StringBuffer sbuff = new StringBuffer();
+
+	static DFSNodeVisitor<Integer> visitor2 = new DFSNodeVisitor<Integer>() {
+
+		@Override
+		public void visitFirstRound(TreeNode<Integer> node) {
+			Integer val = node.getValue();
+			sbuff.append(val);
+			System.out.println("+" + val + " -> [" + sbuff + "]");
+		}
+
+		@Override
+		public void visitSecondRound(TreeNode<Integer> node) {
+			Integer val = sbuff.charAt(sbuff.length() - 1) - '0';
+			sbuff.setLength(sbuff.length() - 1);
+			System.out.println("-" + val + " -> [" + sbuff + "]");
+		}
+
+	};
 
 	public static void main(String[] args) {
 		NumberTreeNode[] nodes = new NumberTreeNode[10];
@@ -87,12 +119,13 @@ public class TreeVisitUtil {
 			}
 
 		};
-		bfsVisit(nodes[0], visitor);
-		System.out.println();
-		dfsVisit(nodes[0], visitor);
-		System.out.println();
-		dfsVisit(nodes[0], visitor,false);
-		}
 
-	
+		dfsVisit(nodes[0], visitor2);
+		// bfsVisit(nodes[0], visitor);
+		// System.out.println();
+		// dfsVisit(nodes[0], visitor);
+		// System.out.println();
+		// dfsVisit(nodes[0], visitor, false);
+	}
+
 }

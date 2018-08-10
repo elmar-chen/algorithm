@@ -1,4 +1,4 @@
-package elmar.algorithm.leecode;
+package elmar.algorithm.leetcode;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,23 +7,25 @@ import java.util.List;
 import elmar.algorithm.DynamicProgramProblem;
 
 public class P233 {
-	// 234: firstDigit->2, left-> 200, right—>34
+	// 234: firstDigit->2, left-> 200, right->34
 	static class NumberParts {
 		int firstDigit;
 		int left;
 		int right;
 	}
 
-	static class CountDigitOne extends DynamicProgramProblem<Integer, Integer> {
+	static class CountDigitOne extends DynamicProgramProblem<Integer, Long> {
 
 		int[] powerOf10s = new int[100];
 
 		@Override
 		protected void init() {
 			long k = 1;
-			for (int i = 0; k < Integer.MAX_VALUE; i++, k *= 10) {
+			int i = 0;
+			for (; k < Integer.MAX_VALUE; i++, k *= 10) {
 				powerOf10s[i] = (int) k;
 			}
+			powerOf10s[i] = Integer.MAX_VALUE;
 		}
 
 		@Override
@@ -41,9 +43,9 @@ public class P233 {
 		}
 
 		@Override
-		public Integer resolveWithDependencies(Integer input) {
+		public Long resolveWithDependencies(Integer input) {
 			if (input < 10) {
-				return 1;
+				return input < 0 ? 0L : 1L;
 			}
 
 			NumberParts parts = splitNumber(input);
@@ -60,7 +62,7 @@ public class P233 {
 		private NumberParts splitNumber(Integer input) {
 			NumberParts parts = new NumberParts();
 			int i = 1;
-			while (powerOf10s[i] <= input) {
+			while (i < powerOf10s.length && powerOf10s[i] <= input && powerOf10s[i] < Integer.MAX_VALUE) {
 				i++;
 			}
 			parts.firstDigit = input / powerOf10s[i - 1];
@@ -69,19 +71,6 @@ public class P233 {
 			return parts;
 		}
 
-	}
-
-	public static void main(String[] args) {
-		CountDigitOne problem = new CountDigitOne();
-		problem.resolve(11);
-		int numOfOne = 0;
-		for (int i = 1; i < 1000; i++) {
-			numOfOne += (i + "").replaceAll("[^1]", "").length();
-			Integer resolved = problem.resolve(i);
-			if (resolved != numOfOne) {
-				System.out.println(i + "---" + resolved + "--" + numOfOne);
-			}
-		}
 	}
 
 }
