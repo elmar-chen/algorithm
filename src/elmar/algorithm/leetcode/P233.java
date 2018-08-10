@@ -7,7 +7,11 @@ import java.util.List;
 import elmar.algorithm.DynamicProgramProblem;
 
 public class P233 {
+<<<<<<< HEAD
 	// 234: firstDigit->2, left-> 200, right->34
+=======
+	// 234: firstDigit->2, left-> 200, rightâ€?>34
+>>>>>>> branch 'master' of https://github.com/elmar-chen/algorithm.git
 	static class NumberParts {
 		int firstDigit;
 		int left;
